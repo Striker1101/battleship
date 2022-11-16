@@ -1,5 +1,8 @@
 import _, { fromPairs } from "lodash";
-import ship, { gameBoard, player, checkWinner } from "./ship.js";
+import { gameBoard, players } from "./ship.js";
 
 const board = gameBoard();
-console.log(board.shot());
+board.placement("66", 3, true);
+board.placement("66", 3, false);
+const move = players();
+move.markMove("45");
