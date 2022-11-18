@@ -15,6 +15,7 @@ const game = (function () {
   let computer = new players("computer", gameBoard());
   let boxPlayer = [];
   let boxComputer = [];
+  let winner = false;
 
   player.fixship([0, 0], 3, true);
   player.fixship([6, 6], 3, true);
@@ -63,14 +64,14 @@ const game = (function () {
   //fill in the grids for gameboard
   function renderBoard() {
     for (let i = 0; i < 100; i++) {
-      const box = document.createElement("div");
+      const box = document.createElement("button");
       box.classList.add("box");
       box.style.cssText = "border:1px solid red; height: 40px; width: 40px; ";
       shipBoard.appendChild(box);
     }
 
     for (let i = 0; i < 100; i++) {
-      const boxTwo = document.createElement("div");
+      const boxTwo = document.createElement("button");
       boxTwo.classList.add("boxTwo");
       boxTwo.style.cssText =
         "border:1px solid red; height: 40px; width: 40px; ";
@@ -103,6 +104,8 @@ const game = (function () {
         Board[
           parseInt(hit[hit.length - 1])
         ].style.cssText = `background-color:${color} ;`;
+
+        Board[parseInt(hit[hit.length - 1])].setAttribute("disabled", "true");
       }
     }
     function reshoot(cord, input) {
@@ -110,11 +113,11 @@ const game = (function () {
       let misscheck = input.miss().includes(cord);
       if (hitCheck === true || misscheck == true) {
         console.log("play again");
-        if (input == "player") {
-          playerMove();
-        } else {
-          computerMove();
-        }
+        // if (input == "player") {
+        //   playerMove();
+        // } else {
+        //   computerMove();
+        // }
       } else {
         if (input == "computer") {
           input = "player";
@@ -125,17 +128,26 @@ const game = (function () {
         input.shot(cord, input.ships());
       }
     }
+    function off(box, boxSecond) {
+      for (let i = 0; i < box.length; i++) {
+        box[i].setAttribute("disabled", "true");
+        boxSecond[i].setAttribute("disabled", "true");
+      }
+    }
 
     //player action on the game
     function playerMove() {
       shotBoard.addEventListener("click", (e) => {
         let take = e.target.getAttribute("data-coord").toString();
-        reshoot(take, player);
+        player.shot(take, computer.ships());
         hitEnemy(player.hit(), boxComputer, "blue");
         hitEnemy(player.miss(), boxComputer, "black");
         let comp = computer.ships();
-        if (player.winner(comp) === true) {
-          say.textContent = `computer  wins`;
+        if (player.winner(comp) == true) {
+          say.style.cssText = "font-size: x-large;";
+          say.textContent = `${playerName} wins`;
+          console.log(boxPlayer);
+          off(boxComputer, boxPlayer);
         }
         computerMove();
       });
@@ -144,12 +156,14 @@ const game = (function () {
     //computer action on the game
     function computerMove() {
       let random = Math.floor(Math.random() * 100).toString();
-      reshoot(random, computer);
+      computer.shot(random, player.ships());
       hitEnemy(computer.hit(), boxPlayer, "blue");
       hitEnemy(computer.miss(), boxPlayer, "black");
-      let Player = player.ships();
-      if (player.winner(Player) === true) {
+      let take = player.ships();
+      if (computer.winner(take) == true) {
         say.textContent = "computer wins";
+        say.style.cssText = "font-size: x-large;";
+        off(boxComputer, boxPlayer);
       }
     }
 
