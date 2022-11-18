@@ -10,25 +10,20 @@ export const gameBoard = () => {
   let shipCordinate = [];
   let missedHitCordinate = [];
   let hitCordinate = [];
+
   // place ship at specifice co-ordinates  in grid
   /**
    *
    * @param {*} cordinate
    * input the grid array index in sting format
    * @param {*} length
-   * input length of the array
+   * input length of the arrat
    * @param {*} direction
    * input direction of the ship
    * true for horizontal // false for left
    * @returns
    */
 
-  // function shot- determeine hit or miss
-  /**
-   *
-   * @param {*} cor input cordinate for cor in string
-   * @returns hitpoints
-   */
   const placement = (cordinateArr, length, direction) => {
     //logic for placing ship
 
@@ -63,11 +58,11 @@ export const gameBoard = () => {
       mark(1);
     }
   };
-
   function tip() {
     return shipObj.slot;
   }
 
+  // function shot- determeine hit or miss
   const shot = (cord, enemyship) => {
     let shipCordinate = enemyship.flat();
     if (shipCordinate.includes(cord)) {
@@ -75,13 +70,12 @@ export const gameBoard = () => {
     } else {
       missedHitCordinate.push(cord);
     }
+    return "done";
   };
 
-  const checkWinner = (enemyship) => {
+  const checkWinner = (enemyship, hitpiont = hitCordinate) => {
     let shipCordinate = enemyship.flat();
-    const include = shipCordinate.every((value) =>
-      hitCordinate.includes(value)
-    );
+    const include = shipCordinate.every((value) => hitpiont.includes(value));
     if (include === true) return true;
   };
 
@@ -115,7 +109,7 @@ export class players {
     this.#enemyBoard.placement(cord, len, dir);
   }
   winner(enemyship) {
-    this.#enemyBoard.checkWinner(enemyship);
+    return this.#enemyBoard.checkWinner(enemyship);
   }
   miss() {
     return this.#enemyBoard.missedHitCordinate;

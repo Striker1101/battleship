@@ -15,7 +15,6 @@ const game = (function () {
   let computer = new players("computer", gameBoard());
   let boxPlayer = [];
   let boxComputer = [];
-  let winner = false;
 
   player.fixship([0, 0], 3, true);
   player.fixship([6, 6], 3, true);
@@ -80,18 +79,6 @@ const game = (function () {
     }
   }
 
-  //   let turn = true;
-  //   // players take turn atacking enermy board
-  //     if (turn) {
-  //       // players turn
-  //       turn = false;
-  //       return player();
-  //     } else {
-  //       //computer turn
-  //       turn = true;
-  //       return computer();
-  //     }
-
   // ingame activity
   const inplay = () => {
     function addShips(box, shipLog) {
@@ -106,26 +93,10 @@ const game = (function () {
         ].style.cssText = `background-color:${color} ;`;
 
         Board[parseInt(hit[hit.length - 1])].setAttribute("disabled", "true");
-      }
-    }
-    function reshoot(cord, input) {
-      let hitCheck = input.hit().includes(cord);
-      let misscheck = input.miss().includes(cord);
-      if (hitCheck === true || misscheck == true) {
-        console.log("play again");
-        // if (input == "player") {
-        //   playerMove();
-        // } else {
-        //   computerMove();
-        // }
-      } else {
-        if (input == "computer") {
-          input = "player";
-        }
-        if (input == "player") {
-          input = "computer";
-        }
-        input.shot(cord, input.ships());
+        Board[parseInt(hit[hit.length - 1])].setAttribute(
+          "data-check",
+          "clicked"
+        );
       }
     }
     function off(box, boxSecond) {
@@ -144,7 +115,6 @@ const game = (function () {
         hitEnemy(player.miss(), boxComputer, "black");
         let comp = computer.ships();
         if (player.winner(comp) == true) {
-          say.style.cssText = "font-size: x-large;";
           say.textContent = `${playerName} wins`;
           console.log(boxPlayer);
           off(boxComputer, boxPlayer);
@@ -152,17 +122,26 @@ const game = (function () {
         computerMove();
       });
     }
+    function ran() {
+      let random = Math.floor(Math.random() * 100);
+      let choose = boxPlayer[random].getAttribute("data-check");
+      if (choose == null) {
+        if (random <= 9) {
+          random = "0" + random;
+        }
+        return random.toString();
+      }
+      return ran();
+    }
 
     //computer action on the game
     function computerMove() {
-      let random = Math.floor(Math.random() * 100).toString();
-      computer.shot(random, player.ships());
+      computer.shot(ran(), player.ships());
       hitEnemy(computer.hit(), boxPlayer, "blue");
       hitEnemy(computer.miss(), boxPlayer, "black");
       let take = player.ships();
       if (computer.winner(take) == true) {
         say.textContent = "computer wins";
-        say.style.cssText = "font-size: x-large;";
         off(boxComputer, boxPlayer);
       }
     }
