@@ -3,30 +3,28 @@ import "./style.css";
 import { players, gameBoard } from "./ship.js";
 
 const game = (function () {
-  let playerName;
-  const form = document.querySelector("#form");
+  //game elements
   const GameBoard = document.querySelector(".gameboard");
   const intro = document.querySelector(".intro");
   const shipBoard = document.querySelector(".ships");
   const shotBoard = document.querySelector(".shot");
   let say = document.querySelector(".say");
 
+  //form inputs
+  const form = document.querySelector("#form");
+  let playerName;
+
+  // creating new object of players
   let player = new players(playerName, gameBoard());
   let computer = new players("computer", gameBoard());
   let boxPlayer = [];
   let boxComputer = [];
 
-  player.fixship([0, 0], 3, true);
-  player.fixship([6, 6], 3, true);
-  player.fixship([3, 4], 3, true);
-  player.fixship([2, 7], 1, false);
-
-  computer.fixship([0, 0], 3, true);
-  computer.fixship([6, 6], 3, true);
+  computer.fixship([0, 0], 5, true);
+  computer.fixship([6, 6], 4, true);
   computer.fixship([3, 4], 3, true);
-  computer.fixship([2, 7], 1, false);
-
-  let shipLogPlayer = player.ships().flat();
+  computer.fixship([2, 7], 3, false);
+  computer.fixship([9, 9], 1, false);
 
   let x = 0;
   let y = 0;
@@ -44,6 +42,24 @@ const game = (function () {
     y++;
     return output;
   }
+  function convertToArray(num) {
+    console.log(typeof num);
+    parseInt(num);
+    if (num <= 9) {
+      num.toString();
+      let arr = num.charAt(1);
+      return [0, parseInt(arr)];
+    }
+    return Array.from(String(num), Number);
+  }
+  function check(name) {
+    if (name.checked) {
+      console.log("checked");
+      return false;
+    }
+    console.log("un");
+    return true;
+  }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -51,6 +67,27 @@ const game = (function () {
     GameBoard.style.display = "flex";
     intro.style.display = "none";
     say.style.display = "block";
+
+    const destroyer = document.querySelector("#destroyer").value;
+    const first = document.querySelector("#first");
+    const frigate = document.querySelector("#frigate").value;
+    const second = document.querySelector("#second");
+    const carrier = document.querySelector("#carrier").value;
+    const third = document.querySelector("#third");
+    const submarine = document.querySelector("#submarine").value;
+    const four = document.querySelector("#four");
+    const coastal = document.querySelector("#coastal").value;
+    const five = document.querySelector("#five");
+
+    // input player values from form input
+    player.fixship(convertToArray(destroyer.toString()), 5, check(first));
+    player.fixship(convertToArray(submarine.toString()), 4, check(four));
+    player.fixship(convertToArray(frigate.toString()), 3, check(second));
+    player.fixship(convertToArray(coastal.toString()), 3, check(five));
+    player.fixship(convertToArray(carrier.toString()), 1, check(third));
+
+    let shipLogPlayer = player.ships().flat();
+
     renderBoard();
     const boxOne = [...document.querySelectorAll(".box")];
     boxPlayer = boxOne;
@@ -83,7 +120,7 @@ const game = (function () {
   const inplay = () => {
     function addShips(box, shipLog) {
       for (let prop in shipLog) {
-        box[parseInt(shipLog[prop])].style.cssText = "background-color: red;";
+        box[parseInt(shipLog[prop])].style.cssText = "background-color: white;";
       }
     }
     function hitEnemy(hit, Board, color) {
@@ -111,7 +148,7 @@ const game = (function () {
       shotBoard.addEventListener("click", (e) => {
         let take = e.target.getAttribute("data-coord").toString();
         player.shot(take, computer.ships());
-        hitEnemy(player.hit(), boxComputer, "blue");
+        hitEnemy(player.hit(), boxComputer, "red");
         hitEnemy(player.miss(), boxComputer, "black");
         let comp = computer.ships();
         if (player.winner(comp) == true) {
@@ -137,7 +174,7 @@ const game = (function () {
     //computer action on the game
     function computerMove() {
       computer.shot(ran(), player.ships());
-      hitEnemy(computer.hit(), boxPlayer, "blue");
+      hitEnemy(computer.hit(), boxPlayer, "red");
       hitEnemy(computer.miss(), boxPlayer, "black");
       let take = player.ships();
       if (computer.winner(take) == true) {
