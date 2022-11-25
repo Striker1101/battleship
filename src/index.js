@@ -10,6 +10,11 @@ const game = (function () {
   const shotBoard = document.querySelector(".shot");
   let say = document.querySelector(".say");
 
+  let cases = ["destroyer", "frigate", "submarine", "coastal", "carrier"];
+  let count = 0;
+  let prevShipLog = 0;
+  let shipLogPlayer = [];
+
   //form inputs
   const form = document.querySelector("#form");
   let playerName;
@@ -20,11 +25,14 @@ const game = (function () {
   let boxPlayer = [];
   let boxComputer = [];
 
-  computer.fixship([0, 0], 5, true);
-  computer.fixship([6, 6], 4, true);
-  computer.fixship([3, 4], 3, true);
-  computer.fixship([2, 7], 3, false);
-  computer.fixship([9, 9], 1, false);
+  //Player color
+  let playerOneColor;
+
+  computer.fixship("cship1", [0, 0], 5, true);
+  computer.fixship("cship2", [5, 6], 4, false);
+  computer.fixship("cship3", [3, 4], 3, true);
+  computer.fixship("cship4", [2, 7], 3, false);
+  computer.fixship("cship5", [8, 8], 1, false);
 
   let x = 0;
   let y = 0;
@@ -42,60 +50,6 @@ const game = (function () {
     y++;
     return output;
   }
-  function convertToArray(num) {
-    console.log(typeof num);
-    parseInt(num);
-    if (num <= 9) {
-      num.toString();
-      let arr = num.charAt(1);
-      return [0, parseInt(arr)];
-    }
-    return Array.from(String(num), Number);
-  }
-  function check(name) {
-    if (name.checked) {
-      console.log("checked");
-      return false;
-    }
-    console.log("un");
-    return true;
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    playerName = document.querySelector(".playerName").value;
-    GameBoard.style.display = "flex";
-    intro.style.display = "none";
-    say.style.display = "block";
-
-    const destroyer = document.querySelector("#destroyer").value;
-    const first = document.querySelector("#first");
-    const frigate = document.querySelector("#frigate").value;
-    const second = document.querySelector("#second");
-    const carrier = document.querySelector("#carrier").value;
-    const third = document.querySelector("#third");
-    const submarine = document.querySelector("#submarine").value;
-    const four = document.querySelector("#four");
-    const coastal = document.querySelector("#coastal").value;
-    const five = document.querySelector("#five");
-
-    // input player values from form input
-    player.fixship(convertToArray(destroyer.toString()), 5, check(first));
-    player.fixship(convertToArray(submarine.toString()), 4, check(four));
-    player.fixship(convertToArray(frigate.toString()), 3, check(second));
-    player.fixship(convertToArray(coastal.toString()), 3, check(five));
-    player.fixship(convertToArray(carrier.toString()), 1, check(third));
-
-    let shipLogPlayer = player.ships().flat();
-
-    renderBoard();
-    const boxOne = [...document.querySelectorAll(".box")];
-    boxPlayer = boxOne;
-    const boxTwo = [...document.querySelectorAll(".boxTwo")];
-    boxComputer = boxTwo;
-    inplay().addShips(boxOne, shipLogPlayer);
-    inplay().playerMove();
-  });
 
   //fill in the grids for gameboard
   function renderBoard() {
@@ -116,11 +70,112 @@ const game = (function () {
     }
   }
 
+  function convertToArray(num) {
+    if (num <= 9) {
+      return [0, parseInt(num)];
+    }
+    return Array.from(String(num), Number);
+  }
+
+  function check(name) {
+    if (name.checked) {
+      return false;
+    }
+    return true;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    playerName = document.querySelector(".playerName").value;
+    playerOneColor = document.querySelector("#playerOneColor").value;
+    GameBoard.style.display = "flex";
+    intro.style.display = "none";
+
+    renderBoard();
+    const boxOne = [...document.querySelectorAll(".box")];
+    boxPlayer = boxOne;
+    const boxTwo = [...document.querySelectorAll(".boxTwo")];
+    boxComputer = boxTwo;
+    let x = 0;
+    let y = 0;
+
+    // fill in data-coord from 00 to 99
+    function lip2() {
+      let output = "";
+
+      if (y > 9) {
+        x++;
+        y = 0;
+      }
+      output = `${x}`;
+      output += `${y}`;
+      y++;
+      return output;
+    }
+
+    for (let i = 0; i < boxOne.length; i++) {
+      boxOne[i].textContent = lip2();
+    }
+
+    let form = document.querySelector(".formInput");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let length;
+      if (cases[count] == cases[0]) {
+        length = 5;
+      } else if (cases[count] == cases[1]) {
+        length = 4;
+      } else if (cases[count] == cases[2]) {
+        length = 3;
+      } else if (cases[count] == cases[3]) {
+        length = 3;
+      } else if (cases[count] == cases[4]) {
+        length = 1;
+      }
+
+      render(cases[count], length);
+      form.reset();
+
+      if (shipLogPlayer.length == 16) {
+        let inputShip = document.querySelector(".inputShip");
+        inputShip.innerHTML = "Let have Fun Guys";
+        inputShip.style.cssText = "color:red; font-size: 20px;";
+        for (let i = 0; i < boxOne.length; i++) {
+          boxOne[i].innerHTML = "";
+        }
+        inplay().playerMove();
+      }
+    });
+  });
+  function render(shipName, length) {
+    let inputTaker = document.querySelector(".number").value;
+    let checkboxTaker = document.querySelector(".checkbox");
+    let shiplabel = document.querySelector(".shiplabel");
+    player.fixship(
+      shipName,
+      convertToArray(inputTaker.toString()),
+      length,
+      check(checkboxTaker)
+    );
+    let shipLog = player.ships().flat();
+    shipLogPlayer = shipLog;
+
+    inplay().addShips(boxPlayer, shipLog, playerOneColor);
+
+    if (shipLog.length > prevShipLog) {
+      count++;
+      shiplabel.textContent = cases[count];
+      prevShipLog = shipLogPlayer.length;
+    }
+  }
+
   // ingame activity
   const inplay = () => {
-    function addShips(box, shipLog) {
+    function addShips(box, shipLog, color) {
       for (let prop in shipLog) {
-        box[parseInt(shipLog[prop])].style.cssText = "background-color: white;";
+        box[
+          parseInt(shipLog[prop])
+        ].style.cssText = `background-color:${color} ;`;
       }
     }
     function hitEnemy(hit, Board, color) {
@@ -147,18 +202,18 @@ const game = (function () {
     function playerMove() {
       shotBoard.addEventListener("click", (e) => {
         let take = e.target.getAttribute("data-coord").toString();
-        player.shot(take, computer.ships());
+        player.shot(take, computer.ships(), computer.logs());
         hitEnemy(player.hit(), boxComputer, "red");
         hitEnemy(player.miss(), boxComputer, "black");
         let comp = computer.ships();
         if (player.winner(comp) == true) {
           say.textContent = `${playerName} wins`;
-          console.log(boxPlayer);
           off(boxComputer, boxPlayer);
         }
         computerMove();
       });
     }
+    function playerTwoMove() {}
     function ran() {
       let random = Math.floor(Math.random() * 100);
       let choose = boxPlayer[random].getAttribute("data-check");
@@ -173,7 +228,7 @@ const game = (function () {
 
     //computer action on the game
     function computerMove() {
-      computer.shot(ran(), player.ships());
+      computer.shot(ran(), player.ships(), player.logs());
       hitEnemy(computer.hit(), boxPlayer, "red");
       hitEnemy(computer.miss(), boxPlayer, "black");
       let take = player.ships();
