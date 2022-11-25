@@ -1,15 +1,27 @@
-class ships {
-  constructor(length) {
+class Ships {
+  constructor(length, namer, log) {
+    this.namer = namer;
     this.length = length;
-    this.slot = [];
+    this.hitpoint = 0;
+    this.shipLog = log;
+  }
+  hit() {
+    this.hitpoint++;
+  }
+  isSunk() {
+    if (this.hitpoint >= this.length) {
+      return true;
+    }
+    return false;
   }
 }
 
 export const gameBoard = () => {
-  let shipObj = new ships();
+  let shipCordinateArr = [];
   let shipCordinate = [];
   let missedHitCordinate = [];
   let hitCordinate = [];
+  let shiplog = [];
 
   // place ship at specifice co-ordinates  in grid
   /**
@@ -24,12 +36,11 @@ export const gameBoard = () => {
    * @returns
    */
 
-  const placement = (cordinateArr, length, direction) => {
+  const placement = (shipName, cordinateArr, length, direction) => {
     //logic for placing ship
 
     function mark(fig) {
       let fake = [];
-      let tog = false;
       //increment based on length
       let i = 0;
       do {
@@ -41,9 +52,9 @@ export const gameBoard = () => {
       //remove any double ship grid
       let check = shipCordinate.filter((x) => fake.includes(x));
       if (check.length == 0) {
-        shipObj.length = length;
-        shipObj.slot.push(fake);
-        tog = true;
+        shipName = new Ships(length, shipName, fake);
+        shiplog.push(shipName);
+        shipCordinateArr.push(fake);
         for (let i = 0; i < fake.length; i++) {
           shipCordinate.push(fake[i]);
         }
@@ -59,18 +70,27 @@ export const gameBoard = () => {
     }
   };
   function tip() {
-    return shipObj.slot;
+    return shipCordinateArr;
   }
 
   // function shot- determeine hit or miss
-  const shot = (cord, enemyship) => {
+  const shot = (cord, enemyship, enemyLog) => {
     let shipCordinate = enemyship.flat();
     if (shipCordinate.includes(cord)) {
-      hitCordinate.push(cord);
+      for (let i = 0; i < enemyLog.length; i++) {
+        if (enemyLog[i].shipLog.includes(cord)) {
+          console.log(enemyLog);
+          enemyLog[i].namer.hit();
+          console.log("boom");
+        }
+      }
+      return hitCordinate.push(cord);
     } else {
-      missedHitCordinate.push(cord);
+      return missedHitCordinate.push(cord);
     }
-    return "done";
+  };
+  const logs = () => {
+    return shiplog;
   };
 
   const checkWinner = (enemyship, hitpiont = hitCordinate) => {
@@ -86,6 +106,7 @@ export const gameBoard = () => {
     hitCordinate,
     checkWinner,
     missedHitCordinate,
+    logs,
   };
 };
 
@@ -102,16 +123,19 @@ export class players {
     return this.#enemyBoard.hitCordinate;
   }
 
-  shot(coord, enemyBoard) {
-    this.#enemyBoard.shot(coord, enemyBoard);
+  shot(coord, enemyBoard, enemylog) {
+    this.#enemyBoard.shot(coord, enemyBoard, enemylog);
   }
-  fixship(cord, len, dir) {
-    this.#enemyBoard.placement(cord, len, dir);
+  fixship(shipName, cord, len, dir) {
+    this.#enemyBoard.placement(shipName, cord, len, dir);
   }
   winner(enemyship) {
     return this.#enemyBoard.checkWinner(enemyship);
   }
   miss() {
     return this.#enemyBoard.missedHitCordinate;
+  }
+  logs() {
+    return this.#enemyBoard.logs();
   }
 }
