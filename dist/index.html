@@ -11,35 +11,36 @@
           <div class="intro">
               <div class="detail">
                   <form action="" id="form">
+                
                   <label for="plyerName"><h3>input your playerName</h3></label><br>
                   <input required type="text" class="playerName" title="type your username"><br>
-                  <label for="inst">place your ship in sea</label>
-                  <input required type="number" max='99' name="destroyer" id="destroyer"title='destroyer' placeholder="00" >
-                   <input type="checkbox" name="first" id="first" title="click to make ship vertical">
-                  <input required type="number" max='99' name="frigate" id="frigate" title= ' frigate' placeholder="11" >
-                  <input type="checkbox" name="second" id="second" title="click to make ship vertical">
-                  <input required type="number" max='99' name="carrier" id="carrier" title="carrier" placeholder="99">
-                  <input type="checkbox" name="third" id="third" title="click to make ship vertical">
-                  <input required type="number" max='99' name="submarine" id="submarine" title="submarine" placeholder= '45'>
-                  <input type="checkbox" name="four" id="four" title="click to make ship vertical">
-                  <input required type="number" max='99' name="coastal" id="coastal" title="coastal" placeholder="66" >
-                  <input type="checkbox" name="five" id="five" title="click to make ship vertical">
-                  <input required type="submit" max='99' value="submit">
-                  </form>
-                  
+                  <label for="playerOneColor">choose your ship color</label>
+                  <input type="color" name="playerOneColor" id="playerOneColor" value="#f6b73c">
+                  <input type="submit" value="submit">
+                
+                  </form>    
               </div>
               <div class="second">
                   <div class="inst">
-                    <p>White is your ship in sea</p>
-                    <p>Red means your ship has been hit</p>
-                    <p>black repre missed ship</p>
+                    <p>input your name </p>
+                    <p>pick your  ship in sea</p>
                     <p>click your shot board to fire</p>
+                    <p>Red means your ship has been hit</p>
+                    <p>black repre missed shot</p>
                     <h2>Goodluck on the Game</h2>
                   </div>
               </div>
           </div>
           <div class="gameboardContainer">
-              <div ><h2 class="say">Goodluck Guys, Lets have fun :)</h2></div>
+            <div class="inputShip">
+              <form action="" class="formInput">
+                <h3 style="color: red;">input your <span class="shiplabel">destroyer</span> </h3>
+                <input type="number" max="99" min="0" class="number" title="destroyer" placeholder="23">
+                <input type="checkbox" name="checkbox" class="checkbox" title="click to make ship vertical">
+                <input type="submit" value="submit">
+              </form>
+            </div>
+              <div class="say"></div>
               <div class="gameboard">
                   <div class="ships"> </div>
                   <div class="shot"></div>
