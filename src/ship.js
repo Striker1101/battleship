@@ -95,7 +95,6 @@ export const gameBoard = () => {
 
   function deleter(log, i) {
     log.splice(i, 1);
-    console.log(log);
   }
   // return ship if it has sunk
   const lost = () => {

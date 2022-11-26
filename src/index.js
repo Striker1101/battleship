@@ -28,11 +28,52 @@ const game = (function () {
   //Player color
   let playerOneColor;
 
-  computer.fixship("cship1", [0, 0], 5, true);
-  computer.fixship("cship2", [5, 6], 4, false);
-  computer.fixship("cship3", [3, 4], 3, true);
-  computer.fixship("cship4", [2, 7], 3, false);
-  computer.fixship("cship5", [8, 8], 1, false);
+  // take value for computer choose().tog
+  let tog;
+
+  computer.fixship("cship1", choose(5), 5, tog);
+  computer.fixship("cship2", choose(4), 4, tog);
+  computer.fixship("cship3", choose(3), 3, tog);
+  computer.fixship("cship4", choose(3), 3, tog);
+  computer.fixship("cship5", choose(1), 1, tog);
+
+  //create random array for ship and verify for double grid
+  function choose(length) {
+    length = length;
+    let shipLog = computer.ships().flat();
+    let coordOne = Math.floor(Math.random() * 9) + 1;
+    let coordTwo = Math.floor(Math.random() * 9) + 1;
+    let arr = [coordOne, coordTwo];
+    let take = arr[0].toString() + arr[1].toString();
+    let pack = [];
+
+    let pick = [true, false];
+    let toggle = pick[Math.floor(Math.random() * 2)];
+    tog = toggle;
+
+    if (toggle == true && arr[1] + length <= 9) {
+      let i = 0;
+      do {
+        pack.push(arr.join("").toString());
+        arr[1]++;
+        i++;
+      } while (i < length);
+    } else if (toggle == false && arr[0] + length <= 9) {
+      let i = 0;
+      do {
+        pack.push(arr.join("").toString());
+        arr[0]++;
+        i++;
+      } while (i < length);
+    } else if (arr[0] + length > 9 || arr[1] + length > 9) {
+      return choose(length);
+    }
+    let check = shipLog.filter((element) => pack.includes(element));
+    if (check.length > 0) {
+      return choose(length);
+    }
+    return [parseInt(take.charAt(0)), parseInt(take.charAt(1))];
+  }
 
   let x = 0;
   let y = 0;
