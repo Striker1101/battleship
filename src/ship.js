@@ -79,9 +79,7 @@ export const gameBoard = () => {
     if (shipCordinate.includes(cord)) {
       for (let i = 0; i < enemyLog.length; i++) {
         if (enemyLog[i].shipLog.includes(cord)) {
-          console.log(enemyLog);
-          enemyLog[i].namer.hit();
-          console.log("boom");
+          enemyLog[i].hit();
         }
       }
       return hitCordinate.push(cord);
@@ -89,10 +87,27 @@ export const gameBoard = () => {
       return missedHitCordinate.push(cord);
     }
   };
+
+  //return shiplog repre all ship obj
   const logs = () => {
     return shiplog;
   };
 
+  function deleter(log, i) {
+    log.splice(i, 1);
+    console.log(log);
+  }
+  // return ship if it has sunk
+  const lost = () => {
+    for (let i = 0; i < shiplog.length; i++) {
+      if (shiplog[i].isSunk() == true) {
+        return { name: shiplog[i].namer, index: i };
+      }
+    }
+    return false;
+  };
+
+  // check for winner
   const checkWinner = (enemyship, hitpiont = hitCordinate) => {
     let shipCordinate = enemyship.flat();
     const include = shipCordinate.every((value) => hitpiont.includes(value));
@@ -107,6 +122,8 @@ export const gameBoard = () => {
     checkWinner,
     missedHitCordinate,
     logs,
+    lost,
+    deleter,
   };
 };
 
@@ -137,5 +154,11 @@ export class players {
   }
   logs() {
     return this.#enemyBoard.logs();
+  }
+  lost() {
+    return this.#enemyBoard.lost();
+  }
+  del(log, index) {
+    this.#enemyBoard.deleter(log, index);
   }
 }

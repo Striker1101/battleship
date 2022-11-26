@@ -5,7 +5,9 @@ it("shot enemy ships", () => {
     ["24", "25", "26", "23"],
     ["71", "72", "73"],
   ];
-  expect(gameBoard().shot("23", enemy)).toBe("done");
+  let hit = [];
+  let miss = [];
+  expect(gameBoard().shot("23", enemy, log)).toBe(["23"]);
 });
 
 it("winner of game", () => {

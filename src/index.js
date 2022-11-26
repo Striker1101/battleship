@@ -198,7 +198,7 @@ const game = (function () {
       }
     }
 
-    //player action on the game
+    //playerOne action on the game
     function playerMove() {
       shotBoard.addEventListener("click", (e) => {
         let take = e.target.getAttribute("data-coord").toString();
@@ -206,6 +206,14 @@ const game = (function () {
         hitEnemy(player.hit(), boxComputer, "red");
         hitEnemy(player.miss(), boxComputer, "black");
         let comp = computer.ships();
+        let take2 = player.lost();
+        if (take2 != false) {
+          say.textContent = `${playerName} lost ${player.lost().name}`;
+          player.del(player.logs(), player.lost().index);
+          setInterval(() => {
+            say.textContent = "";
+          }, 10000);
+        }
         if (player.winner(comp) == true) {
           say.textContent = `${playerName} wins`;
           off(boxComputer, boxPlayer);
@@ -213,7 +221,11 @@ const game = (function () {
         computerMove();
       });
     }
+
+    //playerTwo action on the game
     function playerTwoMove() {}
+
+    //make sure no double grid as picked in computer
     function ran() {
       let random = Math.floor(Math.random() * 100);
       let choose = boxPlayer[random].getAttribute("data-check");
@@ -232,6 +244,14 @@ const game = (function () {
       hitEnemy(computer.hit(), boxPlayer, "red");
       hitEnemy(computer.miss(), boxPlayer, "black");
       let take = player.ships();
+      let take2 = computer.lost();
+      if (take2 != false) {
+        say.textContent = `computer lost ${computer.lost().name}`;
+        computer.del(computer.logs(), computer.lost().index);
+        setInterval(() => {
+          say.textContent = "";
+        }, 10000);
+      }
       if (computer.winner(take) == true) {
         say.textContent = "computer wins";
         off(boxComputer, boxPlayer);
