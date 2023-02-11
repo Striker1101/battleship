@@ -76,15 +76,17 @@ form {
   margin-bottom: 5px;
 }
 .playerOne,
-.playerTwo {
+.playerTwo,
+#dualSubmit,
+.warning{
   display: none;
 }
 
-#formInput{
-    visibility:hidden;
-    background-color: aqua;
-    margin: 10px;
-    border-radius: 15px;
-    padding-bottom: 5px;
-    color:black;
+#formInput {
+  visibility: hidden;
+  background-color: aqua;
+  margin: 10px;
+  border-radius: 15px;
+  padding-bottom: 5px;
+  color: black;
 }

@@ -12,19 +12,30 @@
           <div class="detail">
             <h3 style="text-align: center">Fill in your play Mode</h3>
 
-            <form action="" id="duel">
+            <form action="" id="dual">
               <label for="checkbox"
                 >To play against a human opponent, click here
-                <input type="checkbox" name="checkbox" id="checkbox" />
+                <span class="toggle">
+                  <input type="checkbox" name="checkbox" id="checkbox" />
+                </span>
               </label>
               <label for="playerOne" class="playerOne">
                 Player One
                 <input type="text" name="playerOne" id="playerOne" />
+
+                <input type="color" name="playerOneColor" id="playerOneColor" />
               </label>
+
               <label for="playerTwo" class="playerTwo">
                 Player Two
                 <input type="text" name="playerTwo" id="playerTwo" />
+                <input type="color" name="playerTwoColor" id="playerTwoColor" />
               </label>
+              <input id="dualSubmit" type="submit" value="Submit" />
+              <div class="warning">
+                This Feature has been realeased, please play again the Computer
+                AI
+              </div>
             </form>
 
             <form action="" id="form">
@@ -60,10 +71,8 @@
         </div>
         <div class="gameboardContainer">
           <div class="inputShip">
-            <form action="" id="formInput" >
-              <h3 >
-                input your <span class="shiplabel">destroyer</span>
-              </h3>
+            <form action="" id="formInput">
+              <h3>input your <span class="shiplabel">destroyer</span></h3>
               <label for="shipName">
                 Ship Name:
                 <input

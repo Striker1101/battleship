@@ -1,8 +1,30 @@
 import _, { fromPairs } from "lodash";
 import "./style.css";
 import { players, gameBoard } from "./ship.js";
-let checkbox = document.querySelector(".checkbox");
 
+let toggle = document.querySelector(".toggle");
+toggle.onclick = () => {
+  var form = document.querySelector("#form");
+  let checkbox = document.querySelector("#checkbox").checked;
+  let playerOne = document.querySelector(".playerOne");
+  let playerTwo = document.querySelector(".playerTwo");
+  let warning = document.querySelector(".warning");
+  let dualSubmit = document.querySelector("#dualSubmit");
+
+  if (checkbox) {
+    playerOne.style.display = "block";
+    playerTwo.style.display = "block";
+    dualSubmit.style.display = "block";
+    warning.style.display = "block";
+    form.style.display = "none";
+  } else {
+    playerOne.style.display = "none";
+    playerTwo.style.display = "none";
+    dualSubmit.style.display = "none";
+    warning.style.display = "none";
+    form.style.display = "flex";
+  }
+};
 const game = (function () {
   //game elements
   const GameBoard = document.querySelector(".gameboard");
