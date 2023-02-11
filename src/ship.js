@@ -1,4 +1,4 @@
-class Ships {
+export class Ships {
   constructor(length, namer, log) {
     this.namer = namer;
     this.length = length;
@@ -69,6 +69,8 @@ export const gameBoard = () => {
       mark(1);
     }
   };
+
+  //returns array of ships for this gameboard
   function tip() {
     return shipCordinateArr;
   }
@@ -82,9 +84,11 @@ export const gameBoard = () => {
           enemyLog[i].hit();
         }
       }
-      return hitCordinate.push(cord);
+      hitCordinate.push(cord);
+      return true;
     } else {
-      return missedHitCordinate.push(cord);
+      missedHitCordinate.push(cord);
+      return false;
     }
   };
 
@@ -97,7 +101,7 @@ export const gameBoard = () => {
     log.splice(i, 1);
   }
   // return ship if it has sunk
-  const lost = () => {
+  const lost = (shiplog) => {
     for (let i = 0; i < shiplog.length; i++) {
       if (shiplog[i].isSunk() == true) {
         return { name: shiplog[i].namer, index: i };
@@ -154,8 +158,8 @@ export class players {
   logs() {
     return this.#enemyBoard.logs();
   }
-  lost() {
-    return this.#enemyBoard.lost();
+  lost(shiplog) {
+    return this.#enemyBoard.lost(shiplog);
   }
   del(log, index) {
     this.#enemyBoard.deleter(log, index);

@@ -1,74 +1,90 @@
+body {
+  background-image: url(assets/background.jfif);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  color: whitesmoke;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 100px;
+  color: red;
+  background-color: azure;
+  border-radius: 20px;
+  display: block;
+  width: 90%;
+}
+.playerName {
+  border-radius: 5px;
+  border: red 2px solid;
+}
+.inst {
+  text-align: center;
+}
 
-body{
-    background-image: url(assets/background.jfif);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    color: whitesmoke;
+input[type="number"] {
+  width: 80px;
 }
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.gameboardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.intro{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    top: 100px;
-    color: red;
-    background-color: azure;
-    border-radius: 20px;
-    display: block;
-    width: 90%;
+.gameboard {
+  position: relative;
+  display: none;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  top: 100px;
+  width: 90%;
+  left: 50px;
 }
-.playerName{
-    border-radius: 5px;
-    border: red 2px solid;
+.ships {
+  display: grid;
+  grid: repeat(10, 1fr) / repeat(10, 1fr);
+  gap: 0.5px;
+  border: 3px solid black;
+  height: 50%;
+  background-color: aqua;
 }
-.inst{
-    text-align: center;
+
+.shot {
+  display: grid;
+  grid: repeat(10, 1fr) / repeat(10, 1fr);
+  gap: 0.5px;
+  border: 3px solid black;
 }
-#form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
 }
-input[type='number']{
-    width: 80px;
+.playerOne,
+.playerTwo {
+  display: none;
 }
-.gameboardContainer{
-    display: flex;
-    flex-direction: column;
-    align-items:center ;
-}
-.gameboard{
-    position: relative;
-    display: none;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    top: 100px;
-    width: 90%;
-    left: 50px;
-}
-.ships{
-    display: grid;
-    grid: repeat(10,1fr)/ repeat(10, 1fr);
-    gap: .5px;
-    border: 3px solid black;
-    height: 50%;
+
+#formInput{
+    visibility:hidden;
     background-color: aqua;
-}
-
-.shot{
-    display: grid;
-    grid: repeat(10,1fr)/ repeat(10, 1fr);
-    gap: .5px;
-    border: 3px solid black;
-    
+    margin: 10px;
+    border-radius: 15px;
+    padding-bottom: 5px;
+    color:black;
 }

@@ -1,6 +1,7 @@
 import _, { fromPairs } from "lodash";
 import "./style.css";
 import { players, gameBoard } from "./ship.js";
+let checkbox = document.querySelector(".checkbox");
 
 const game = (function () {
   //game elements
@@ -9,6 +10,7 @@ const game = (function () {
   const shipBoard = document.querySelector(".ships");
   const shotBoard = document.querySelector(".shot");
   let say = document.querySelector(".say");
+  const formInput = document.getElementById("formInput");
 
   let cases = ["destroyer", "frigate", "submarine", "coastal", "carrier"];
   let count = 0;
@@ -31,6 +33,7 @@ const game = (function () {
   // take value for computer choose().tog
   let tog;
 
+  //fixing values for computer
   computer.fixship("cship1", choose(5), 5, tog);
   computer.fixship("cship2", choose(4), 4, tog);
   computer.fixship("cship3", choose(3), 3, tog);
@@ -125,18 +128,20 @@ const game = (function () {
     return true;
   }
 
+  //take username for one player
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     playerName = document.querySelector(".playerName").value;
     playerOneColor = document.querySelector("#playerOneColor").value;
     GameBoard.style.display = "flex";
     intro.style.display = "none";
+    formInput.style.visibility = "visible";
 
     renderBoard();
-    const boxOne = [...document.querySelectorAll(".box")];
-    boxPlayer = boxOne;
-    const boxTwo = [...document.querySelectorAll(".boxTwo")];
-    boxComputer = boxTwo;
+    boxPlayer = [...document.querySelectorAll(".box")];
+
+    boxComputer = [...document.querySelectorAll(".boxTwo")];
+
     let x = 0;
     let y = 0;
 
@@ -154,12 +159,11 @@ const game = (function () {
       return output;
     }
 
-    for (let i = 0; i < boxOne.length; i++) {
-      boxOne[i].textContent = lip2();
+    for (let i = 0; i < boxPlayer.length; i++) {
+      boxPlayer[i].textContent = lip2();
     }
 
-    let form = document.querySelector(".formInput");
-    form.addEventListener("submit", (e) => {
+    formInput.addEventListener("submit", (e) => {
       e.preventDefault();
       let length;
       if (cases[count] == cases[0]) {
@@ -175,14 +179,14 @@ const game = (function () {
       }
 
       render(cases[count], length);
-      form.reset();
+      formInput.reset();
 
       if (shipLogPlayer.length == 16) {
         let inputShip = document.querySelector(".inputShip");
         inputShip.innerHTML = "Let have Fun Guys";
         inputShip.style.cssText = "color:red; font-size: 20px;";
-        for (let i = 0; i < boxOne.length; i++) {
-          boxOne[i].innerHTML = "";
+        for (let i = 0; i < boxPlayer.length; i++) {
+          boxPlayer[i].innerHTML = "";
         }
         inplay().playerMove();
       }
@@ -247,10 +251,13 @@ const game = (function () {
         hitEnemy(player.hit(), boxComputer, "red");
         hitEnemy(player.miss(), boxComputer, "black");
         let comp = computer.ships();
-        let take2 = player.lost();
+
+        // render a reply when player losses a ship
+        const log = player.logs();
+        let take2 = player.lost(log);
         if (take2 != false) {
-          say.textContent = `${playerName} lost ${player.lost().name}`;
-          player.del(player.logs(), player.lost().index);
+          say.textContent = `${playerName} lost ${player.lost(log).name}`;
+          player.del(player.logs(), player.lost(log).index);
           setInterval(() => {
             say.textContent = "";
           }, 10000);
@@ -285,10 +292,11 @@ const game = (function () {
       hitEnemy(computer.hit(), boxPlayer, "red");
       hitEnemy(computer.miss(), boxPlayer, "black");
       let take = player.ships();
-      let take2 = computer.lost();
+      let logs = computer.logs();
+      let take2 = computer.lost(logs);
       if (take2 != false) {
-        say.textContent = `computer lost ${computer.lost().name}`;
-        computer.del(computer.logs(), computer.lost().index);
+        say.textContent = `computer lost ${computer.lost(logs).name}`;
+        computer.del(logs, computer.lost(logs).index);
         setInterval(() => {
           say.textContent = "";
         }, 10000);
@@ -298,7 +306,6 @@ const game = (function () {
         off(boxComputer, boxPlayer);
       }
     }
-
     return { addShips, playerMove };
   };
 })();
