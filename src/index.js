@@ -227,7 +227,7 @@ const game = (function () {
     let shipLog = player.ships().flat();
     shipLogPlayer = shipLog;
 
-    inplay().addShips(boxPlayer, shipLog, playerOneColor);
+    inplay().addShips(boxPlayer, shipLog, playerColor);
 
     if (shipLog.length > prevShipLog) {
       count++;
