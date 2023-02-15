@@ -50,7 +50,7 @@ const game = (function () {
   let boxComputer = [];
 
   //Player color
-  let playerOneColor;
+  let playerColor;
 
   // take value for computer choose().tog
   let tog;
@@ -154,7 +154,7 @@ const game = (function () {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     playerName = document.querySelector(".playerName").value;
-    playerOneColor = document.querySelector("#playerOneColor").value;
+    playerColor = document.querySelector("#playerColor").value;
     GameBoard.style.display = "flex";
     intro.style.display = "none";
     formInput.style.visibility = "visible";
